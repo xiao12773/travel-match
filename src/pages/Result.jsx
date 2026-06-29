@@ -1,14 +1,40 @@
 import { useState } from 'react';
 import { Radar, RadarExplain } from '../components/Radar';
 import { calcPersona, checkAttention, encode } from '../utils/quiz';
+import { createRoom } from '../utils/room';
+import { supabaseEnabled } from '../lib/supabase';
 
 export default function Result({ answers, onReset }) {
   const [copied, setCopied] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [matchLink, setMatchLink] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [matchErr, setMatchErr] = useState('');
   const persona = calcPersona(answers);
   const reliable = checkAttention(answers);
   const code = encode(answers);
   const restriction = answers['T19'];
+
+  async function startMatch() {
+    setCreating(true);
+    setMatchErr('');
+    try {
+      const roomId = await createRoom(answers);
+      setMatchLink(`${window.location.origin}/room/${roomId}`);
+    } catch {
+      setMatchErr('创建匹配失败，请稍后再试');
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  function copyMatchLink() {
+    navigator.clipboard?.writeText(matchLink).then(() => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    });
+  }
 
   function copy() {
     navigator.clipboard?.writeText(code).then(() => {
@@ -66,6 +92,27 @@ export default function Result({ answers, onReset }) {
         <div className="card" style={{ marginTop: 14, padding: '20px 22px' }}>
           <p style={{ fontSize: 11, color: '#8B8578', letterSpacing: 1, marginBottom: 8 }}>饮食限制</p>
           <p style={{ fontSize: 14, lineHeight: 1.6 }}>{restriction}</p>
+        </div>
+      )}
+
+      {/* 双人匹配 */}
+      {supabaseEnabled && (
+        <div className="card" style={{ marginTop: 28, padding: '22px 22px' }}>
+          <p style={{ fontSize: 11, color: '#8B8578', letterSpacing: 1, marginBottom: 8 }}>和同伴一起测</p>
+          <p style={{ fontSize: 14, color: '#6B6560', lineHeight: 1.7, marginBottom: 16 }}>
+            发起一次匹配，把链接发给同伴。双方都完成测试后，才能解锁匹配报告。
+          </p>
+          {!matchLink ? (
+            <button className="btn-primary" onClick={startMatch} disabled={creating}>
+              {creating ? '创建中…' : '发起匹配 →'}
+            </button>
+          ) : (
+            <>
+              <div className="code-box" style={{ marginBottom: 10 }}>{matchLink}</div>
+              <button className="btn-ghost" onClick={copyMatchLink}>{linkCopied ? '✓ 已复制' : '复制链接'}</button>
+            </>
+          )}
+          {matchErr && <p style={{ fontSize: 13, color: '#C0392B', marginTop: 10 }}>{matchErr}</p>}
         </div>
       )}
 

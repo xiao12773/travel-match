@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Result from './pages/Result';
+import Room from './pages/Room';
 
-export default function App() {
-  const [page, setPage] = useState('home');
+function useAnswers() {
   const [answers, setAnswers] = useState(null);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('tm_answers');
-      if (saved) {
-        setAnswers(JSON.parse(saved));
-        setPage('result');
-      }
+      if (saved) setAnswers(JSON.parse(saved));
     } catch {
       // ignore
     }
@@ -34,14 +32,72 @@ export default function App() {
     } catch {
       // ignore
     }
-    setPage('home');
   }
 
+  return { answers, save, reset };
+}
+
+function HomeOrResult({ answers, save }) {
+  const navigate = useNavigate();
+  if (answers) return <Result answers={answers} onReset={() => navigate('/reset')} />;
   return (
-    <div className="app">
-      {page === 'home' && <Home onStart={() => setPage('quiz')} onRestore={(ans) => { save(ans); setPage('result'); }} />}
-      {page === 'quiz' && <Quiz onDone={(ans) => { save(ans); setPage('result'); }} onHome={reset} />}
-      {page === 'result' && answers && <Result answers={answers} onReset={reset} />}
-    </div>
+    <Home
+      onStart={() => navigate('/quiz')}
+      onRestore={(ans) => {
+        save(ans);
+        navigate('/');
+      }}
+    />
+  );
+}
+
+function QuizPage({ save }) {
+  const navigate = useNavigate();
+  return (
+    <Quiz
+      onDone={(ans) => {
+        save(ans);
+        navigate('/');
+      }}
+      onHome={() => navigate('/')}
+    />
+  );
+}
+
+function ResetPage({ reset }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    reset();
+    navigate('/', { replace: true });
+  }, []);
+  return null;
+}
+
+export default function App() {
+  const { answers, save, reset } = useAnswers();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="app">
+              <HomeOrResult answers={answers} save={save} />
+            </div>
+          }
+        />
+        <Route
+          path="/quiz"
+          element={
+            <div className="app">
+              <QuizPage save={save} />
+            </div>
+          }
+        />
+        <Route path="/reset" element={<ResetPage reset={reset} />} />
+        <Route path="/room/:roomId" element={<Room />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
