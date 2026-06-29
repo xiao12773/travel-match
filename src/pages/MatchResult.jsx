@@ -1,7 +1,7 @@
 import { calcPersona } from '../utils/quiz';
 import { totalMatchScore, matchTier, matchHighlights } from '../utils/match';
 
-export default function MatchResult({ answersA, answersB }) {
+export default function MatchResult({ answersA, answersB, viewer = 'b' }) {
   const personaA = calcPersona(answersA);
   const personaB = calcPersona(answersB);
   const score = totalMatchScore(answersA, answersB);
@@ -19,18 +19,27 @@ export default function MatchResult({ answersA, answersB }) {
       <p style={{ fontSize: 14, color: '#8B8578', lineHeight: 1.7 }}>{tier.desc}</p>
 
       {/* 双方人格对比 */}
-      <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
-        {[{ label: 'A', persona: personaA }, { label: 'B', persona: personaB }].map(({ label, persona }) => (
-          <div key={label} className="card" style={{ flex: 1, padding: '20px 16px' }}>
-            <p style={{ fontSize: 11, color: '#8B8578', marginBottom: 10, letterSpacing: 1 }}>{label}</p>
-            <p style={{ fontSize: 14, lineHeight: 1.8 }}>
-              {persona.pace.emoji} {persona.pace.name}<br />
-              {persona.spending.emoji} {persona.spending.name}<br />
-              {persona.social.emoji} {persona.social.name}
-            </p>
-          </div>
-        ))}
-      </div>
+      {[
+        { label: viewer === 'a' ? '你' : 'TA', persona: personaA },
+        { label: viewer === 'a' ? 'TA' : '你', persona: personaB },
+      ].map(({ label, persona }) => (
+        <div key={label} className="card" style={{ marginTop: 20, padding: '20px 20px' }}>
+          <p style={{ fontSize: 11, color: '#8B8578', letterSpacing: 1, marginBottom: 14 }}>{label}的旅行人格</p>
+          <h3 style={{ fontFamily: 'DM Serif Display,serif', fontSize: 18, marginBottom: 16 }}>
+            {persona.pace.emoji} {persona.pace.name} · {persona.spending.emoji} {persona.spending.name} · {persona.social.emoji} {persona.social.name}
+          </h3>
+          {[
+            { label: '行程风格', data: persona.pace },
+            { label: '消费倾向', data: persona.spending },
+            { label: '社交风格', data: persona.social },
+          ].map(({ label: dimLabel, data }) => (
+            <div key={dimLabel} style={{ marginBottom: 14, paddingBottom: 14, borderBottom: '1px solid #E4DED6' }}>
+              <p style={{ fontSize: 11, color: '#8B8578', letterSpacing: 1, marginBottom: 6 }}>{dimLabel}</p>
+              <p style={{ fontSize: 14, lineHeight: 1.8 }}>{data.desc}</p>
+            </div>
+          ))}
+        </div>
+      ))}
 
       {/* 高度匹配维度 */}
       <div className="card" style={{ marginTop: 14, padding: '20px 22px' }}>

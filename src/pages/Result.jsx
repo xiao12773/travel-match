@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Radar, RadarExplain } from '../components/Radar';
 import { calcPersona, checkAttention, encode } from '../utils/quiz';
 import { createRoom } from '../utils/room';
 import { supabaseEnabled } from '../lib/supabase';
 
 export default function Result({ answers, onReset }) {
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [matchLink, setMatchLink] = useState(null);
@@ -21,7 +23,9 @@ export default function Result({ answers, onReset }) {
     setMatchErr('');
     try {
       const roomId = await createRoom(answers);
-      setMatchLink(`${window.location.origin}/room/${roomId}`);
+      const link = `${window.location.origin}/room/${roomId}`;
+      setMatchLink(link);
+      navigate(`/room/${roomId}`);
     } catch {
       setMatchErr('创建匹配失败，请稍后再试');
     } finally {
