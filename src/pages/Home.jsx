@@ -25,9 +25,14 @@ export default function Home({ onStart, onRestore }) {
       <h1 style={{ fontFamily: 'DM Serif Display,serif', fontSize: 36, lineHeight: 1.25, marginBottom: 18 }}>
         出发之前，<br />先认识一下彼此
       </h1>
-      <p style={{ fontSize: 15, color: '#8B8578', lineHeight: 1.8, marginBottom: 40 }}>
-        和一个人出门，其实比想象中更需要默契。节奏、花销、拍照、分账……细节才是旅途中真正的考验。花几分钟发现你的旅行风格，再决定要不要一起出发。
+      <p style={{ fontSize: 15, color: '#8B8578', lineHeight: 1.9, marginBottom: 36 }}>
+        你们说好了要一起去，目的地都选好了，群也建了。<br /><br />
+        但有些话还没聊。谁来做攻略？钱怎么结算？你喜欢早起赶第一班缆车，对方可能习惯睡到自然醒。你觉得旅行就该好好吃一顿，对方可能随便找个地方填饱肚子就走。<br /><br />
+        这些事聊起来总有点尬——像在审问对方，又怕显得自己太计较。于是就这么带着这些问题出发了。直到旅途中某一刻，两个人都沉默着，谁也不说话。那时候机票退不了，酒店退不了，只能硬撑着走完剩下的行程。<br /><br />
+        花十分钟做完这个测试。你会拿到自己的旅行人格——你是什么节奏、把钱花在哪里、需不需要独处时间充电。把链接发给对方，等他也测完，你们会看到一份报告：哪些地方你们天然合拍，哪些地方值得出发前坐下来聊十分钟。<br /><br />
+        把该说的话说完，然后放心出发。
       </p>
+      <p style={{ fontSize: 12, color: '#B0A89E', marginBottom: 12, letterSpacing: 0.5 }}>约28题 · 发现你的旅行人格 · 可邀请对方匹配</p>
       <button className="btn-primary" onClick={onStart}>开始测试 →</button>
       <div style={{ marginTop: 14 }}>
         {!showRestore ? (

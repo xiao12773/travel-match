@@ -38,6 +38,9 @@ export const QUESTIONS = [
   { id: 'T23', dim: 'transport', type: 'scene', text: '景点之间大概3公里，打车15元，走路40分钟。同伴说想走过去顺便逛逛。你的感受是？', options: [{ label: '好啊，走路才能发现有趣的东西', value: 4 }, { label: '可以走，但如果太晒可能会后悔', value: 3 }, { label: '有点浪费时间，但同伴想走就走', value: 2 }, { label: '打车吧，时间更值钱', value: 1 }] },
   { id: 'T24', dim: 'sleep', type: 'likert', text: '旅行时我会比平时更早起床，不想浪费白天的时间', options: LK },
   { id: 'T25', dim: 'sleep', type: 'likert', text: '旅行中睡到自然醒对我来说很重要', options: LKR },
+  { id: 'T26', dim: 'value', type: 'choice_other', text: '对你来说，一次旅行算成功的标准是什么？', options: [{ label: '打卡了想去的地方，有照片和回忆', value: 'checkin' }, { label: '吃到了真正满意的东西', value: 'food' }, { label: '有几个真正放松下来的瞬间', value: 'relax' }, { label: '对这个地方有了真实的了解和感受', value: 'understand' }, { label: '其他', value: 'other' }] },
+  { id: 'T27', dim: 'stamina', type: 'choice', text: '旅行中你每天能接受的步行量大概是？', options: [{ label: '5000步以内（约3-4公里，走1小时就到极限了）', value: 1 }, { label: '1万步左右（约7公里，正常逛一天的量）', value: 2 }, { label: '1.5万步以上（约10公里，爬山逛老城都没问题）', value: 3 }, { label: '没有上限（约15公里+，越走越起劲）', value: 4 }] },
+  { id: 'T28', dim: 'dealbreaker', type: 'text', text: '旅行中你最不能接受的一件事是什么？', sub: '选填，填了会展示给对方看', placeholder: '例如：临时取消计划、在安静场合外放视频……', optional: true },
 ];
 
 export const ATTENTION = [

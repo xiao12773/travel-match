@@ -17,6 +17,16 @@ export default function Result({ answers, onReset }) {
   const reliable = checkAttention(answers);
   const code = encode(answers);
   const restriction = answers['T19'];
+  const travelValue = answers['T26'];
+  const dealbreaker = answers['T28'];
+
+  const VALUE_LABELS = {
+    checkin: '打卡了想去的地方，有照片和回忆',
+    food: '吃到了真正满意的东西',
+    relax: '有几个真正放松下来的瞬间',
+    understand: '对这个地方有了真实的了解和感受',
+  };
+  const valueLabelText = travelValue ? (VALUE_LABELS[travelValue] || travelValue) : null;
 
   async function startMatch() {
     setCreating(true);
@@ -90,6 +100,14 @@ export default function Result({ answers, onReset }) {
           <RadarExplain answers={answers} />
         </div>
       </div>
+
+      {/* 旅行价值观 */}
+      {valueLabelText && (
+        <div className="card" style={{ marginTop: 14, padding: '20px 22px' }}>
+          <p style={{ fontSize: 11, color: '#8B8578', letterSpacing: 1, marginBottom: 8 }}>旅行成功的标准</p>
+          <p style={{ fontSize: 14, lineHeight: 1.6 }}>{valueLabelText}</p>
+        </div>
+      )}
 
       {/* 忌口 */}
       {restriction && restriction.trim() !== '无' && restriction.trim() !== '' && (

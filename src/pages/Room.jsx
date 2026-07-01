@@ -142,6 +142,7 @@ export default function Room() {
           <p style={{ fontSize: 14, color: '#8B8578', lineHeight: 1.7, marginBottom: 16 }}>把下面的链接发给同伴，TA 完成后这里会自动解锁匹配结果。</p>
           <div className="code-box" style={{ marginBottom: 10, wordBreak: 'break-all' }}>{shareLink}</div>
           <button className="btn-ghost" onClick={() => navigator.clipboard?.writeText(shareLink)}>复制链接</button>
+          <p style={{ fontSize: 12, color: '#B0A89E', marginTop: 10, lineHeight: 1.7 }}>链接已发出，不用一直等在这里。TA 完成后重新打开这个页面，匹配结果会自动出现。</p>
         </div>
         <div style={{ borderTop: '1px solid #E4DED6', paddingTop: 24 }}>
           <p style={{ fontSize: 12, color: '#8B8578', letterSpacing: 3, marginBottom: 14, textAlign: 'center' }}>你的旅行人格</p>

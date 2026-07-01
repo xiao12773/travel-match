@@ -6,17 +6,38 @@ export default function Quiz({ onDone, onHome }) {
   const [list] = useState(buildQuizList);
   const [idx, setIdx] = useState(0);
   const [ans, setAns] = useState({});
+  const [otherText, setOtherText] = useState({});
   const [confirm, setConfirm] = useState(false);
 
   const q = list[idx];
   const total = list.length;
   const cur = ans[q.id];
-  const canGo = q.type === 'text' ? cur !== undefined && cur.trim() !== '' : cur !== undefined;
+
+  function canProceed() {
+    if (q.optional) return true;
+    if (q.type === 'text') return cur !== undefined && cur.trim() !== '';
+    if (q.type === 'choice_other') {
+      if (cur === undefined) return false;
+      if (cur === 'other') return (otherText[q.id] || '').trim() !== '';
+      return true;
+    }
+    return cur !== undefined;
+  }
 
   function next() {
-    if (idx < total - 1) setIdx((i) => i + 1);
-    else onDone(ans);
+    // 对 choice_other 且选了"其他"的，把文本作为最终值存入 ans
+    let finalAns = ans;
+    if (q.type === 'choice_other' && cur === 'other') {
+      finalAns = { ...ans, [q.id]: otherText[q.id] || '' };
+    }
+    if (idx < total - 1) {
+      setAns(finalAns);
+      setIdx((i) => i + 1);
+    } else {
+      onDone(finalAns);
+    }
   }
+
   function setAnswer(v) {
     setAns((a) => ({ ...a, [q.id]: v }));
   }
@@ -54,13 +75,29 @@ export default function Quiz({ onDone, onHome }) {
           <RankQ q={q} value={cur} onChange={setAnswer} />
         ) : q.type === 'text' ? (
           <textarea className="text-input" rows={3} placeholder={q.placeholder} value={cur || ''} onChange={(e) => setAnswer(e.target.value)} />
+        ) : q.type === 'choice_other' ? (
+          <>
+            {q.options.map((o) => (
+              <button key={o.value} className={`option-btn ${cur === o.value || (o.value === 'other' && cur === 'other') ? 'selected' : ''}`} onClick={() => setAnswer(o.value)}>{o.label}</button>
+            ))}
+            {cur === 'other' && (
+              <textarea
+                className="text-input"
+                rows={2}
+                placeholder="请描述你的标准…"
+                value={otherText[q.id] || ''}
+                onChange={(e) => setOtherText((t) => ({ ...t, [q.id]: e.target.value }))}
+                style={{ marginTop: 4 }}
+              />
+            )}
+          </>
         ) : (
           q.options.map((o) => (
             <button key={o.value} className={`option-btn ${cur === o.value ? 'selected' : ''}`} onClick={() => setAnswer(o.value)}>{o.label}</button>
           ))
         )}
       </div>
-      <button className="btn-primary" onClick={next} disabled={!canGo}>
+      <button className="btn-primary" onClick={next} disabled={!canProceed()}>
         {idx === total - 1 ? '查看我的旅行人格 →' : '下一题'}
       </button>
     </div>

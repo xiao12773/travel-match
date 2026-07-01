@@ -12,18 +12,19 @@ const ATTRACTION_MATRIX = {
 const SPENDING_PRIORITY_ORDER = ['stay', 'food', 'experience', 'shopping'];
 
 const WEIGHTS = {
-  pace: 0.15,
-  splitting: 0.15,
-  planning: 0.12,
-  emotion: 0.12,
-  budget: 0.1,
-  alone: 0.1,
-  food: 0.08,
-  spending: 0.08,
-  sleep: 0.05,
-  transport: 0.05,
-  photo: 0.05,
-  attraction: 0.05,
+  pace: 0.13,
+  splitting: 0.13,
+  planning: 0.10,
+  emotion: 0.10,
+  budget: 0.08,
+  alone: 0.08,
+  food: 0.07,
+  spending: 0.07,
+  stamina: 0.08,
+  sleep: 0.04,
+  transport: 0.04,
+  photo: 0.04,
+  attraction: 0.04,
 };
 
 // 普通维度（差值法），用各自题目的 dimScore 差值
@@ -35,6 +36,7 @@ const DIFF_DIMS = {
   alone: ['T13', 'T14'],
   food: ['T17', 'T18'],
   spending: ['T02', 'T03'],
+  stamina: ['T27'],
   sleep: ['T24', 'T25'],
   transport: ['T22', 'T23'],
   photo: ['T20', 'T21'],
@@ -87,14 +89,14 @@ export function totalMatchScore(answersA, answersB) {
 
 export function matchTier(score) {
   if (score >= 80) return { label: '天生搭子', desc: '主要维度高度一致，可以放心出发' };
-  if (score >= 60) return { label: '有缘搭子', desc: '大方向合得来，有几个点需要提前聊清楚' };
-  return { label: '互补搭子', desc: '差异较大，不代表不合适，需要更多磨合' };
+  if (score >= 60) return { label: '有缘搭子', desc: '大方向合得来，有几件事出发前聊一聊' };
+  return { label: '互补搭子', desc: '你们风格各有不同，提前说好比旅途中发现代价小' };
 }
 
 const DIM_LABELS = {
   pace: '节奏', splitting: '分账', planning: '计划', emotion: '情绪处理',
   budget: '预算', alone: '独处需求', food: '美食', spending: '消费弹性',
-  sleep: '作息', transport: '交通', photo: '拍照', attraction: '景点偏好',
+  stamina: '体力', sleep: '作息', transport: '交通', photo: '拍照', attraction: '景点偏好',
 };
 
 const DIM_SUGGESTIONS = {
@@ -106,6 +108,7 @@ const DIM_SUGGESTIONS = {
   alone: '约定好如果有人想要独处时间，怎么开口、怎么回应。',
   food: '提前聊聊对吃饭这件事的优先级，要不要为了一顿饭专门等位。',
   spending: '聊聊对超预算的接受度，避免临时为该不该花钱起争执。',
+  stamina: '提前聊聊每天大概能走多少路，步行量差太多旅途中容易产生摩擦。',
   sleep: '约定好起床时间，避免一方觉得被拖累、一方觉得被催促。',
   transport: '提前商量打车和走路怎么取舍，尤其是赶时间的时候。',
   photo: '聊聊拍照需要多少时间，找到双方都舒服的等待节奏。',
