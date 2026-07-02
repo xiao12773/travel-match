@@ -91,6 +91,11 @@ export default function MatchResult({ answersA, answersB, viewer = 'b' }) {
         ))}
       </div>
 
+      {/* 结语 */}
+      <p style={{ fontSize: 13, color: '#B0A89E', lineHeight: 1.8, marginTop: 20, textAlign: 'center' }}>
+        匹配程度不决定全部的同行质量，只取决于合作的心。这些题目仅供讨论的思路参考，希望大家都能找到合适的同伴，一路玩的开心畅快！
+      </p>
+
       {/* 出发前互相了解（忌口 + 底线） */}
       {showMutualSection && (
         <div className="card" style={{ marginTop: 14, padding: '20px 22px' }}>
