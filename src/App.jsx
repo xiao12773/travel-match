@@ -4,6 +4,16 @@ import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Result from './pages/Result';
 import Room from './pages/Room';
+import { supabase, supabaseEnabled } from './lib/supabase';
+
+async function recordCompletion() {
+  if (!supabaseEnabled) return;
+  try {
+    await supabase.from('completions').insert({ completed_at: new Date().toISOString() });
+  } catch {
+    // 统计失败不影响主流程
+  }
+}
 
 function useAnswers() {
   const [answers, setAnswers] = useState(null);
@@ -24,6 +34,7 @@ function useAnswers() {
     } catch {
       // ignore
     }
+    recordCompletion();
   }
   function reset() {
     setAnswers(null);
